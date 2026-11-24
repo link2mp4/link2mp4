@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#10131d">
+<meta name="description" content="A free, browser-based video converter shortcut.">
+<title>Link2MP4</title>
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #0b0e16;
+  --panel: #141a28;
+  --panel2: #1a2233;
+  --line: #293449;
+  --text: #f5f7fb;
+  --muted: #9aa7bd;
+  --blue: #6c8cff;
+  --cyan: #54d6d0;
+  --green: #55d6a0;
+  --red: #ff7777;
+  --brand: #718cff;
+  --brand-ink: #07111d;
+  --ok: #55d6a0;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: radial-gradient(ellipse at 50% -20%, #26345c 0%, transparent 48%), var(--bg);
+  color: var(--text);
+  font: 15px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  min-height: 100vh;
+}
+
+button, input { font: inherit; }
+button { cursor: pointer; }
+
+.wrap {
+  width: min(920px, calc(100% - 32px));
+  margin: auto;
+  padding: 28px 0 52px;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 54px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-weight: 800;
+  font-size: 19px;
+  letter-spacing: -.5px;
+}
+
+.logo {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #7192ff, #45d4c9);
+  display: grid;
+  place-items: center;
+  color: #09111d;
+  font-size: 20px;
+}
+
+.pill {
+  border: 1px solid #315a51;
+  background: #142b2a;
+  color: #8fe6c2;
+  padding: 6px 11px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.eyebrow {
+  color: #8ca6ff;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+.hero h1 {
+  font-size: clamp(36px, 7vw, 60px);
+  line-height: 1.05;
+  letter-spacing: -2.8px;
+  margin: 12px 0;
+}
+
+.gradient {
+  background: linear-gradient(90deg, #9cb0ff, #6be0d4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero p.lead {
+  color: var(--muted);
+  max-width: 590px;
+  margin: 0 auto;
+  font-size: 16px;
+}
+
+.card {
+  background: linear-gradient(180deg, rgba(24, 31, 48, .97), rgba(17, 23, 36, .97));
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: clamp(17px, 4vw, 28px);
+  box-shadow: 0 24px 80px #0005;
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  color: #c4cee0;
+  font-weight: 650;
+  margin-bottom: 7px;
+}
+
+.row {
+  display: flex;
+  gap: 9px;
+}
+
+input[type=url] {
+  min-width: 0;
+  flex: 1;
+  background: #0e1522;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: #fff;
+  padding: 13px 14px;
+  outline: none;
+}
+
+input[type=url]:focus {
+  border-color: #7895ff;
+}
+
+.primary, .go {
+  border: 0;
+  background: linear-gradient(100deg, #718cff, #4fced0);
+  color: #07111d;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-weight: 800;
+  box-shadow: 0 8px 25px #536fbd35;
+}
+
+.ghost, .secondary {
+  border: 1px solid var(--line);
+  background: #1a2436;
+  color: #e9efff;
+  border-radius: 11px;
+  padding: 10px 14px;
+  font-weight: 650;
+}
+
+.go {
+  width: 100%;
+  margin-top: 14px;
+  font-size: 15px;
+}
+
+button:disabled, input:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.detect {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 12px 0 0;
+  min-height: 1.5em;
+}
+
+.detect b {
+  color: var(--ok);
+}
+
+.err {
+  color: var(--red);
+  font-size: 13px;
+  margin: 8px 0 0;
+  min-height: 1.5em;
+}
+
+.steps {
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  background: #101827;
+  border-radius: 14px;
+}
+
+.steps[hidden] {
+  display: none;
+}
+
+.steps h2 {
+  font-size: 14px;
+  margin: 0 0 10px;
+  color: var(--text);
+}
+
+.steps ol {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.steps li + li {
+  margin-top: 6px;
+}
+
+.steps a {
+  color: var(--cyan);
+}
+
+.sites {
+  text-align: center;
+  color: #77849a;
+  font-size: 12px;
+  margin-top: 28px;
+}
+
+.sites a {
+  color: inherit;
+}
+
+dialog {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 0;
+  max-width: 440px;
+  width: calc(100% - 32px);
+  background: #141a28;
+  color: var(--text);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+}
+
+dialog::backdrop {
+  background: rgba(5, 7, 12, 0.75);
+}
+
+.dlg {
+  padding: 24px;
+}
+
+.dlg h2 {
+  font-size: 20px;
+  margin: 0 0 10px;
+  letter-spacing: -.5px;
+}
+
+.dlg p {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.dlg ul {
+  margin: 0 0 18px;
+  padding-left: 20px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.dlg ul li + li {
+  margin-top: 4px;
+}
+
+.dlg .go {
+  margin-top: 0;
+}
+
+.dlg .ghost {
+  width: 100%;
+  margin-top: 8px;
+}
+
+@media(max-width: 620px) {
+  nav { margin-bottom: 38px; }
+  .pill { font-size: 11px; }
+  .hero h1 { letter-spacing: -1.7px; }
+  .row { flex-direction: column; }
+  .row .ghost { width: 100%; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <div class="brand"><div class="logo">▶</div>Link2MP4</div>
+    <div class="pill">FREE · FAST HELPER</div>
+  </nav>
+
+  <header class="hero">
+    <div class="eyebrow">Quick Video Downloader Helper</div>
+    <h1>Video in.<br><span class="gradient">MP4 out.</span></h1>
+    <p class="lead">Paste a YouTube, Facebook, Instagram or TikTok link. We copy it and open the right downloader for you.</p>
+  </header>
+
+  <main class="card" aria-label="Link converter">
+    <label for="link">Video link</label>
+    <div class="row">
+      <input id="link" type="url" inputmode="url" placeholder="https://" autocomplete="off" disabled>
+      <button id="paste" class="ghost" type="button" disabled>Paste</button>
+    </div>
+    <p id="detect" class="detect" aria-live="polite"></p>
+    <p id="err" class="err" role="alert"></p>
+    <button id="go" class="go" type="button" disabled>Get MP4</button>
+
+    <div id="steps" class="steps" hidden>
+      <h2>Your link is copied. Follow these steps:</h2>
+      <ol id="stepList"></ol>
+    </div>
+  </main>
+
+  <p class="sites">Opens: ytmp3.gl, save-free.com, savefrom.net. These are separate sites, not run by Link2MP4. Only download videos you have the right to save.</p>
+</div>
+
+<dialog id="consent" aria-labelledby="ct">
+  <div class="dlg">
+    <h2 id="ct">Before you start</h2>
+    <p>To work, Link2MP4 needs your OK to:</p>
+    <ul>
+      <li>Copy the link you enter to your clipboard.</li>
+      <li>Read your clipboard when you press Paste.</li>
+      <li>Open a third-party downloader site in a new tab.</li>
+    </ul>
+    <button id="agree" class="go" type="button">I agree</button>
+    <button id="decline" class="ghost" type="button">No thanks</button>
+  </div>
+</dialog>
+
+<script>
+(function(){
+  var KEY="link2mp4-consent-v1";
+  var $=function(id){return document.getElementById(id)};
+  var link=$("link"),paste=$("paste"),go=$("go"),detect=$("detect"),err=$("err"),steps=$("steps"),stepList=$("stepList"),dlg=$("consent");
+
+  var SITES={
+    youtube:{name:"YouTube",url:"https://ytmp3.gl/",tips:["Your video and MP4 should already be loaded.","Press Convert, then Download.","If the box is empty, paste the link and switch MP3 to MP4."]},
+    facebook:{name:"Facebook",url:"https://en1.savefrom.net/9-how-to-download-facebook-video-8GJ.html",tips:["Paste the link into the box (Ctrl+V, or long-press and Paste).","Press Download.","Pick the quality you want."]},
+    instagram:{name:"Instagram",url:"https://www.save-free.com/en/video-downloader/",tips:["Paste the link into the box (Ctrl+V, or long-press and Paste).","Press Download.","Save the video file."]},
+    tiktok:{name:"TikTok",url:"https://en1.savefrom.net/28-tiktok-mp4-3Bu.html",tips:["Paste the link into the box (Ctrl+V, or long-press and Paste).","Press Download.","Save the MP4."]}
+  };
+
+  function kind(u){
+    var h;
+    try{h=new URL(u).hostname.toLowerCase()}catch(e){return null}
+    if(/(^|\.)(youtube\.com|youtu\.be)$/.test(h))return "youtube";
+    if(/(^|\.)(facebook\.com|fb\.watch|fb\.com)$/.test(h))return "facebook";
+    if(/(^|\.)instagram\.com$/.test(h))return "instagram";
+    if(/(^|\.)(tiktok\.com)$/.test(h))return "tiktok";
+    return null;
+  }
+
+  function getConsent(){try{return localStorage.getItem(KEY)==="yes"}catch(e){return false}}
+  function setConsent(){try{localStorage.setItem(KEY,"yes")}catch(e){}}
+
+  function unlock(){link.disabled=false;paste.disabled=false;update();link.focus()}
+  function lock(){link.disabled=true;paste.disabled=true;go.disabled=true}
+
+  function update(){
+    err.textContent="";
+    var v=link.value.trim(),k=v?kind(v):null;
+    if(!v){detect.textContent="";go.disabled=true;return}
+    if(k){detect.innerHTML="Detected: <b>"+SITES[k].name+"</b>";go.disabled=false}
+    else{detect.textContent="Link not recognised. Use a YouTube, Facebook, Instagram or TikTok link.";go.disabled=true}
+  }
+
+  function ytId(raw){
+    try{
+      var u=new URL(raw);
+      if(u.hostname.indexOf("youtu.be")>-1)return u.pathname.split("/").filter(Boolean)[0]||null;
+      if(u.searchParams.get("v"))return u.searchParams.get("v");
+      var p=u.pathname.split("/").filter(Boolean);
+      if(["shorts","embed","live"].indexOf(p[0])>-1)return p[1]||null;
+    }catch(e){}
+    return null;
+  }
+
+  function copy(text){
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      return navigator.clipboard.writeText(text).then(function(){return true},function(){return legacy(text)});
+    }
+    return Promise.resolve(legacy(text));
+  }
+  function legacy(text){
+    try{
+      var t=document.createElement("textarea");t.value=text;t.style.position="fixed";t.style.opacity="0";
+      document.body.appendChild(t);t.select();var ok=document.execCommand("copy");document.body.removeChild(t);return ok;
+    }catch(e){return false}
+  }
+
+  link.addEventListener("input",update);
+
+  paste.addEventListener("click",function(){
+    err.textContent="";
+    if(!navigator.clipboard||!navigator.clipboard.readText){err.textContent="Your browser blocks Paste here. Long-press or press Ctrl+V in the box instead.";return}
+    navigator.clipboard.readText().then(function(t){link.value=(t||"").trim();update()},function(){err.textContent="Clipboard access was blocked. Press Ctrl+V in the box instead."});
+  });
+
+  go.addEventListener("click",function(){
+    var v=link.value.trim(),k=kind(v);
+    if(!k)return;
+    var s=SITES[k];
+    var w=window.open("about:blank","_blank");
+    var target=s.url+"#l2m="+encodeURIComponent(v);
+    if(k==="youtube"){var id=ytId(v);if(id)target=s.url+"#"+encodeURIComponent(id)+"/mp4"}
+    if(w){try{w.opener=null}catch(e){}w.location.href=target}
+    copy(v).then(function(ok){
+      stepList.innerHTML="";
+      s.tips.forEach(function(t){var li=document.createElement("li");li.textContent=t;stepList.appendChild(li)});
+      if(!ok){var li=document.createElement("li");li.textContent="Copy failed. Copy your link manually before pasting.";stepList.insertBefore(li,stepList.firstChild)}
+      if(!w){var li2=document.createElement("li");li2.innerHTML='Tab was blocked. <a href="'+s.url+'" target="_blank" rel="noopener">Open '+s.name+' downloader</a>.';stepList.insertBefore(li2,stepList.firstChild)}
+      steps.hidden=false;
+    });
+  });
+
+  $("agree").addEventListener("click",function(){setConsent();dlg.close();unlock()});
+  $("decline").addEventListener("click",function(){dlg.close();lock();detect.textContent="Link2MP4 needs your OK to work. Reload the page to see the prompt again."});
+  dlg.addEventListener("cancel",function(e){e.preventDefault()});
+
+  if(getConsent()){unlock()}
+  else{lock();if(dlg.showModal)dlg.showModal();else dlg.setAttribute("open","")}
+})();
+</script>
+</body>
+</html>
