@@ -39,7 +39,7 @@ button, input { font: inherit; }
 button { cursor: pointer; }
 
 .wrap {
-  width: min(920px, calc(100% - 32px));
+  width: min(1200px, calc(100% - 32px));
   margin: auto;
   padding: 28px 0 52px;
 }
@@ -114,7 +114,17 @@ nav {
   font-size: 16px;
 }
 
+.content-layout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: center;
+}
+
 .card {
+  flex: 1;
+  min-width: 0;
+  max-width: 700px;
   background: linear-gradient(180deg, rgba(24, 31, 48, .97), rgba(17, 23, 36, .97));
   border: 1px solid var(--line);
   border-radius: 22px;
@@ -122,7 +132,27 @@ nav {
   box-shadow: 0 24px 80px #0005;
 }
 
-.ad-slot {
+.ad-side {
+  width: 160px;
+  min-height: 600px;
+  border: 1px dashed var(--line);
+  border-radius: 16px;
+  background: rgba(16, 24, 39, .65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.ad-side iframe {
+  width: 160px;
+  height: 600px;
+  border: 0;
+  display: block;
+}
+
+.ad-bottom {
   margin-top: 20px;
   padding: 12px;
   border: 1px dashed var(--line);
@@ -307,6 +337,11 @@ dialog::backdrop {
   margin-top: 8px;
 }
 
+@media(max-width: 900px) {
+  .content-layout { flex-direction: column; align-items: center; }
+  .ad-side { width: 160px; min-height: 600px; height: 600px; }
+}
+
 @media(max-width: 620px) {
   nav { margin-bottom: 38px; }
   .pill { font-size: 11px; }
@@ -329,23 +364,33 @@ dialog::backdrop {
     <p class="lead">Paste a YouTube, Facebook, Instagram or TikTok link. We copy it and open the right downloader for you.</p>
   </header>
 
-  <main class="card" aria-label="Link converter">
-    <label for="link">Video link</label>
-    <div class="row">
-      <input id="link" type="url" inputmode="url" placeholder="https://" autocomplete="off" disabled>
-      <button id="paste" class="ghost" type="button" disabled>Paste</button>
-    </div>
-    <p id="detect" class="detect" aria-live="polite"></p>
-    <p id="err" class="err" role="alert"></p>
-    <button id="go" class="go" type="button" disabled>Get MP4</button>
+  <div class="content-layout">
+    <aside class="ad-side" aria-label="Left Advertisement">
+      <iframe title="Left Ad" scrolling="no" srcdoc='<!DOCTYPE html><html><body style="margin:0;padding:0;background:transparent;overflow:hidden;"><script>atOptions={"key":"07d0011f3469cef798c2a04479d28a9c","format":"iframe","height":600,"width":160,"params":{}};</script><script data-cfasync="false" src="https://bauval.org/22/07d0011f3469cef798c2a04479d28a9c"></script></body></html>'></iframe>
+    </aside>
 
-    <div id="steps" class="steps" hidden>
-      <h2>Your link is copied. Follow these steps:</h2>
-      <ol id="stepList"></ol>
-    </div>
-  </main>
+    <main class="card" aria-label="Link converter">
+      <label for="link">Video link</label>
+      <div class="row">
+        <input id="link" type="url" inputmode="url" placeholder="https://" autocomplete="off" disabled>
+        <button id="paste" class="ghost" type="button" disabled>Paste</button>
+      </div>
+      <p id="detect" class="detect" aria-live="polite"></p>
+      <p id="err" class="err" role="alert"></p>
+      <button id="go" class="go" type="button" disabled>Get MP4</button>
 
-  <aside class="ad-slot" aria-label="Advertisement">
+      <div id="steps" class="steps" hidden>
+        <h2>Your link is copied. Follow these steps:</h2>
+        <ol id="stepList"></ol>
+      </div>
+    </main>
+
+    <aside class="ad-side" aria-label="Right Advertisement">
+      <iframe title="Right Ad" scrolling="no" srcdoc='<!DOCTYPE html><html><body style="margin:0;padding:0;background:transparent;overflow:hidden;"><script>atOptions={"key":"07d0011f3469cef798c2a04479d28a9c","format":"iframe","height":600,"width":160,"params":{}};</script><script data-cfasync="false" src="https://bauval.org/22/07d0011f3469cef798c2a04479d28a9c"></script></body></html>'></iframe>
+    </aside>
+  </div>
+
+  <aside class="ad-bottom" aria-label="Bottom Advertisement">
     <script>
       atOptions = {
         'key' : '7a362207f5de24eb61a6f54d5b551dd1',
