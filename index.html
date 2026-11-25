@@ -183,6 +183,20 @@ nav {
   text-align: center;
 }
 
+.ad-mobile-top {
+  max-width: 360px;
+  margin: 0 auto 24px;
+  padding: 10px;
+  border: 1px dashed var(--line);
+  border-radius: 16px;
+  background: rgba(16, 24, 39, .65);
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 label {
   display: block;
   font-size: 13px;
@@ -360,10 +374,10 @@ dialog::backdrop {
 }
 
 @media(max-width: 620px) {
-  nav { margin-bottom: 28px; }
+  nav { margin-bottom: 24px; }
   .pill { font-size: 11px; }
   .hero { margin-bottom: 22px; }
-  .hero h1 { letter-spacing: -1.7px; }
+  .hero h1 { letter-spacing: -1.7px; margin-top: 22px; }
   .row { flex-direction: column; }
   .row .ghost { width: 100%; }
 }
@@ -375,6 +389,8 @@ dialog::backdrop {
     <div class="brand"><div class="logo">▶</div>Link2MP4</div>
     <div class="pill">FREE · FAST HELPER</div>
   </nav>
+
+  <div id="top-mobile-ad-slot"></div>
 
   <header class="hero">
     <div class="eyebrow">Quick Video Downloader Helper</div>
@@ -441,6 +457,23 @@ dialog::backdrop {
     return aside;
   }
 
+  function makeMobileBanner(slotClass, label) {
+    var aside = document.createElement("aside");
+    aside.className = slotClass;
+    aside.setAttribute("aria-label", label);
+
+    var optScript = document.createElement("script");
+    optScript.text = "atOptions = { 'key' : '1625617b1b49d0af844445e505f0a578', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };";
+
+    var adScript = document.createElement("script");
+    adScript.dataset.cfasync = "false";
+    adScript.src = "https://bauval.org/22/1625617b1b49d0af844445e505f0a578";
+
+    aside.appendChild(optScript);
+    aside.appendChild(adScript);
+    return aside;
+  }
+
   if (isDesktopSide) {
     var leftSlot = document.getElementById("left-ad-slot");
     var rightSlot = document.getElementById("right-ad-slot");
@@ -467,22 +500,14 @@ dialog::backdrop {
       bottomSlot.appendChild(bottomAside);
     }
   } else {
+    var topMobileSlot = document.getElementById("top-mobile-ad-slot");
+    if (topMobileSlot) {
+      topMobileSlot.appendChild(makeMobileBanner("ad-mobile-top", "Top Mobile Advertisement"));
+    }
+
     var mobileSlot = document.getElementById("mobile-ad-slot");
     if (mobileSlot) {
-      var mobileAside = document.createElement("aside");
-      mobileAside.className = "ad-mobile";
-      mobileAside.setAttribute("aria-label", "Mobile Advertisement");
-
-      var mOptScript = document.createElement("script");
-      mOptScript.text = "atOptions = { 'key' : '1625617b1b49d0af844445e505f0a578', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };";
-
-      var mAdScript = document.createElement("script");
-      mAdScript.dataset.cfasync = "false";
-      mAdScript.src = "https://bauval.org/22/1625617b1b49d0af844445e505f0a578";
-
-      mobileAside.appendChild(mOptScript);
-      mobileAside.appendChild(mAdScript);
-      mobileSlot.appendChild(mobileAside);
+      mobileSlot.appendChild(makeMobileBanner("ad-mobile", "Bottom Mobile Advertisement"));
     }
   }
 })();
