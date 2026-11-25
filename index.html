@@ -457,17 +457,17 @@ dialog::backdrop {
     return aside;
   }
 
-  function makeMobileBanner(slotClass, label) {
+  function makeBannerUnit(slotClass, label, key, width, height) {
     var aside = document.createElement("aside");
     aside.className = slotClass;
     aside.setAttribute("aria-label", label);
 
     var optScript = document.createElement("script");
-    optScript.text = "atOptions = { 'key' : '1625617b1b49d0af844445e505f0a578', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };";
+    optScript.text = "atOptions = { 'key' : '" + key + "', 'format' : 'iframe', 'height' : " + height + ", 'width' : " + width + ", 'params' : {} };";
 
     var adScript = document.createElement("script");
     adScript.dataset.cfasync = "false";
-    adScript.src = "https://bauval.org/22/1625617b1b49d0af844445e505f0a578";
+    adScript.src = "https://bauval.org/22/" + key;
 
     aside.appendChild(optScript);
     aside.appendChild(adScript);
@@ -484,30 +484,23 @@ dialog::backdrop {
   if (!isMobile) {
     var bottomSlot = document.getElementById("bottom-ad-slot");
     if (bottomSlot) {
-      var bottomAside = document.createElement("aside");
-      bottomAside.className = "ad-bottom";
-      bottomAside.setAttribute("aria-label", "Bottom Advertisement");
-
-      var optScript = document.createElement("script");
-      optScript.text = "atOptions = { 'key' : '7a362207f5de24eb61a6f54d5b551dd1', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };";
-
-      var adScript = document.createElement("script");
-      adScript.dataset.cfasync = "false";
-      adScript.src = "https://bauval.org/22/7a362207f5de24eb61a6f54d5b551dd1";
-
-      bottomAside.appendChild(optScript);
-      bottomAside.appendChild(adScript);
-      bottomSlot.appendChild(bottomAside);
+      bottomSlot.appendChild(
+        makeBannerUnit("ad-bottom", "Bottom Advertisement", "7a362207f5de24eb61a6f54d5b551dd1", 728, 90)
+      );
     }
   } else {
     var topMobileSlot = document.getElementById("top-mobile-ad-slot");
     if (topMobileSlot) {
-      topMobileSlot.appendChild(makeMobileBanner("ad-mobile-top", "Top Mobile Advertisement"));
+      topMobileSlot.appendChild(
+        makeBannerUnit("ad-mobile-top", "Top Mobile Advertisement", "ee4c16b9efdae36815e2e1324dfeecba", 320, 50)
+      );
     }
 
     var mobileSlot = document.getElementById("mobile-ad-slot");
     if (mobileSlot) {
-      mobileSlot.appendChild(makeMobileBanner("ad-mobile", "Bottom Mobile Advertisement"));
+      mobileSlot.appendChild(
+        makeBannerUnit("ad-mobile", "Bottom Mobile Advertisement", "1625617b1b49d0af844445e505f0a578", 320, 50)
+      );
     }
   }
 })();
