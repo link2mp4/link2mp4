@@ -169,32 +169,34 @@ nav {
   overflow-x: auto;
 }
 
-.ad-mobile {
-  max-width: 360px;
-  margin: 18px auto 0;
-  padding: 10px;
+.ad-mobile,
+.ad-mobile-top {
+  max-width: 344px;
+  padding: 8px;
   border: 1px dashed var(--line);
   border-radius: 16px;
   background: rgba(16, 24, 39, .65);
-  min-height: 70px;
+  min-height: 66px;
   display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
+  overflow: hidden;
+}
+
+.ad-mobile {
+  margin: 18px auto 0;
 }
 
 .ad-mobile-top {
-  max-width: 360px;
   margin: 0 auto 24px;
-  padding: 10px;
-  border: 1px dashed var(--line);
-  border-radius: 16px;
-  background: rgba(16, 24, 39, .65);
-  min-height: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+}
+
+.ad-mobile iframe,
+.ad-mobile-top iframe {
+  width: 320px;
+  height: 50px;
+  border: 0;
+  display: block;
 }
 
 label {
@@ -445,21 +447,27 @@ dialog::backdrop {
   var isMobile = window.innerWidth <= 760;
   var isDesktopSide = window.innerWidth > 900;
 
-  function makeSideFrame(label) {
+  function makeIframeUnit(containerClass, label, key, width, height) {
     var aside = document.createElement("aside");
-    aside.className = "ad-side";
+    aside.className = containerClass;
     aside.setAttribute("aria-label", label);
+
     var iframe = document.createElement("iframe");
     iframe.title = label;
     iframe.scrolling = "no";
-    iframe.srcdoc = '<!DOCTYPE html><html><body style="margin:0;padding:0;background:transparent;overflow:hidden;"><script>atOptions={"key":"07d0011f3469cef798c2a04479d28a9c","format":"iframe","height":600,"width":160,"params":{}};<\/script><script data-cfasync="false" src="https://bauval.org/22/07d0011f3469cef798c2a04479d28a9c"><\/script></body></html>';
+    iframe.srcdoc =
+      '<!DOCTYPE html><html><body style="margin:0;padding:0;background:transparent;overflow:hidden;">' +
+      '<script>atOptions={"key":"' + key + '","format":"iframe","height":' + height + ',"width":' + width + ',"params":{}};<\/script>' +
+      '<script data-cfasync="false" src="https://bauval.org/22/' + key + '"><\/script>' +
+      '</body></html>';
+
     aside.appendChild(iframe);
     return aside;
   }
 
-  function makeBannerUnit(slotClass, label, key, width, height) {
+  function makeDesktopBottomUnit(label, key, width, height) {
     var aside = document.createElement("aside");
-    aside.className = slotClass;
+    aside.className = "ad-bottom";
     aside.setAttribute("aria-label", label);
 
     var optScript = document.createElement("script");
@@ -477,29 +485,29 @@ dialog::backdrop {
   if (isDesktopSide) {
     var leftSlot = document.getElementById("left-ad-slot");
     var rightSlot = document.getElementById("right-ad-slot");
-    if (leftSlot) leftSlot.appendChild(makeSideFrame("Left Advertisement"));
-    if (rightSlot) rightSlot.appendChild(makeSideFrame("Right Advertisement"));
+    if (leftSlot) leftSlot.appendChild(makeIframeUnit("ad-side", "Left Advertisement", "07d0011f3469cef798c2a04479d28a9c", 160, 600));
+    if (rightSlot) rightSlot.appendChild(makeIframeUnit("ad-side", "Right Advertisement", "07d0011f3469cef798c2a04479d28a9c", 160, 600));
   }
 
   if (!isMobile) {
     var bottomSlot = document.getElementById("bottom-ad-slot");
     if (bottomSlot) {
       bottomSlot.appendChild(
-        makeBannerUnit("ad-bottom", "Bottom Advertisement", "7a362207f5de24eb61a6f54d5b551dd1", 728, 90)
+        makeDesktopBottomUnit("Bottom Advertisement", "7a362207f5de24eb61a6f54d5b551dd1", 728, 90)
       );
     }
   } else {
     var topMobileSlot = document.getElementById("top-mobile-ad-slot");
     if (topMobileSlot) {
       topMobileSlot.appendChild(
-        makeBannerUnit("ad-mobile-top", "Top Mobile Advertisement", "ee4c16b9efdae36815e2e1324dfeecba", 320, 50)
+        makeIframeUnit("ad-mobile-top", "Top Mobile Advertisement", "ee4c16b9efdae36815e2e1324dfeecba", 320, 50)
       );
     }
 
     var mobileSlot = document.getElementById("mobile-ad-slot");
     if (mobileSlot) {
       mobileSlot.appendChild(
-        makeBannerUnit("ad-mobile", "Bottom Mobile Advertisement", "1625617b1b49d0af844445e505f0a578", 320, 50)
+        makeIframeUnit("ad-mobile", "Bottom Mobile Advertisement", "1625617b1b49d0af844445e505f0a578", 320, 50)
       );
     }
   }
