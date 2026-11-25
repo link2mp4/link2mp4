@@ -169,6 +169,20 @@ nav {
   overflow-x: auto;
 }
 
+.ad-mobile {
+  max-width: 360px;
+  margin: 18px auto 0;
+  padding: 10px;
+  border: 1px dashed var(--line);
+  border-radius: 16px;
+  background: rgba(16, 24, 39, .65);
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 label {
   display: block;
   font-size: 13px;
@@ -343,11 +357,6 @@ dialog::backdrop {
 @media(max-width: 900px) {
   .content-layout { flex-direction: column; align-items: stretch; }
   .card { max-width: 100%; }
-  .ad-side { display: none; }
-}
-
-@media(max-width: 760px) {
-  .ad-bottom { display: none; }
 }
 
 @media(max-width: 620px) {
@@ -374,9 +383,7 @@ dialog::backdrop {
   </header>
 
   <div class="content-layout">
-    <aside class="ad-side" aria-label="Left Advertisement">
-      <iframe title="Left Ad" scrolling="no" srcdoc='<!DOCTYPE html><html><body style="margin:0;padding:0;background:transparent;overflow:hidden;"><script>atOptions={"key":"07d0011f3469cef798c2a04479d28a9c","format":"iframe","height":600,"width":160,"params":{}};</script><script data-cfasync="false" src="https://bauval.org/22/07d0011f3469cef798c2a04479d28a9c"></script></body></html>'></iframe>
-    </aside>
+    <div id="left-ad-slot"></div>
 
     <main class="card" aria-label="Link converter">
       <label for="link">Video link</label>
@@ -394,23 +401,11 @@ dialog::backdrop {
       </div>
     </main>
 
-    <aside class="ad-side" aria-label="Right Advertisement">
-      <iframe title="Right Ad" scrolling="no" srcdoc='<!DOCTYPE html><html><body style="margin:0;padding:0;background:transparent;overflow:hidden;"><script>atOptions={"key":"07d0011f3469cef798c2a04479d28a9c","format":"iframe","height":600,"width":160,"params":{}};</script><script data-cfasync="false" src="https://bauval.org/22/07d0011f3469cef798c2a04479d28a9c"></script></body></html>'></iframe>
-    </aside>
+    <div id="right-ad-slot"></div>
   </div>
 
-  <aside class="ad-bottom" aria-label="Bottom Advertisement">
-    <script>
-      atOptions = {
-        'key' : '7a362207f5de24eb61a6f54d5b551dd1',
-        'format' : 'iframe',
-        'height' : 90,
-        'width' : 728,
-        'params' : {}
-      };
-    </script>
-    <script data-cfasync="false" src="https://bauval.org/22/7a362207f5de24eb61a6f54d5b551dd1"></script>
-  </aside>
+  <div id="bottom-ad-slot"></div>
+  <div id="mobile-ad-slot"></div>
 
   <p class="sites">Opens: ytmp3.gl, save-free.com, savefrom.net. These are separate sites, not run by Link2MP4. Only download videos you have the right to save.</p>
 </div>
@@ -428,6 +423,70 @@ dialog::backdrop {
     <button id="decline" class="ghost" type="button">No thanks</button>
   </div>
 </dialog>
+
+<script>
+(function(){
+  var isMobile = window.innerWidth <= 760;
+  var isDesktopSide = window.innerWidth > 900;
+
+  function makeSideFrame(label) {
+    var aside = document.createElement("aside");
+    aside.className = "ad-side";
+    aside.setAttribute("aria-label", label);
+    var iframe = document.createElement("iframe");
+    iframe.title = label;
+    iframe.scrolling = "no";
+    iframe.srcdoc = '<!DOCTYPE html><html><body style="margin:0;padding:0;background:transparent;overflow:hidden;"><script>atOptions={"key":"07d0011f3469cef798c2a04479d28a9c","format":"iframe","height":600,"width":160,"params":{}};<\/script><script data-cfasync="false" src="https://bauval.org/22/07d0011f3469cef798c2a04479d28a9c"><\/script></body></html>';
+    aside.appendChild(iframe);
+    return aside;
+  }
+
+  if (isDesktopSide) {
+    var leftSlot = document.getElementById("left-ad-slot");
+    var rightSlot = document.getElementById("right-ad-slot");
+    if (leftSlot) leftSlot.appendChild(makeSideFrame("Left Advertisement"));
+    if (rightSlot) rightSlot.appendChild(makeSideFrame("Right Advertisement"));
+  }
+
+  if (!isMobile) {
+    var bottomSlot = document.getElementById("bottom-ad-slot");
+    if (bottomSlot) {
+      var bottomAside = document.createElement("aside");
+      bottomAside.className = "ad-bottom";
+      bottomAside.setAttribute("aria-label", "Bottom Advertisement");
+
+      var optScript = document.createElement("script");
+      optScript.text = "atOptions = { 'key' : '7a362207f5de24eb61a6f54d5b551dd1', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };";
+
+      var adScript = document.createElement("script");
+      adScript.dataset.cfasync = "false";
+      adScript.src = "https://bauval.org/22/7a362207f5de24eb61a6f54d5b551dd1";
+
+      bottomAside.appendChild(optScript);
+      bottomAside.appendChild(adScript);
+      bottomSlot.appendChild(bottomAside);
+    }
+  } else {
+    var mobileSlot = document.getElementById("mobile-ad-slot");
+    if (mobileSlot) {
+      var mobileAside = document.createElement("aside");
+      mobileAside.className = "ad-mobile";
+      mobileAside.setAttribute("aria-label", "Mobile Advertisement");
+
+      var mOptScript = document.createElement("script");
+      mOptScript.text = "atOptions = { 'key' : '1625617b1b49d0af844445e505f0a578', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };";
+
+      var mAdScript = document.createElement("script");
+      mAdScript.dataset.cfasync = "false";
+      mAdScript.src = "https://bauval.org/22/1625617b1b49d0af844445e505f0a578";
+
+      mobileAside.appendChild(mOptScript);
+      mobileAside.appendChild(mAdScript);
+      mobileSlot.appendChild(mobileAside);
+    }
+  }
+})();
+</script>
 
 <script>
 (function(){
