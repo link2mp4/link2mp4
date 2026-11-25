@@ -116,7 +116,6 @@ nav {
   font-size: 16px;
 }
 
-/* Push side ads out toward the left and right borders */
 .content-layout {
   display: flex;
   gap: 24px;
@@ -342,14 +341,19 @@ dialog::backdrop {
 }
 
 @media(max-width: 900px) {
-  .content-layout { flex-direction: column; align-items: center; }
-  .card { width: 100%; }
-  .ad-side { width: 160px; min-height: 600px; height: 600px; }
+  .content-layout { flex-direction: column; align-items: stretch; }
+  .card { max-width: 100%; }
+  .ad-side { display: none; }
+}
+
+@media(max-width: 760px) {
+  .ad-bottom { display: none; }
 }
 
 @media(max-width: 620px) {
-  nav { margin-bottom: 38px; }
+  nav { margin-bottom: 28px; }
   .pill { font-size: 11px; }
+  .hero { margin-bottom: 22px; }
   .hero h1 { letter-spacing: -1.7px; }
   .row { flex-direction: column; }
   .row .ghost { width: 100%; }
